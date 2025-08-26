@@ -1,0 +1,112 @@
+{
+  "version": "1.0",
+  "startTime": 1756232101775,
+  "frames": [
+    {
+      "timestamp": 63,
+      "content": "Recording Terminal $ ",
+      "type": "output"
+    },
+    {
+      "timestamp": 5785,
+      "content": "h",
+      "type": "input"
+    },
+    {
+      "timestamp": 5889,
+      "content": "e",
+      "type": "input"
+    },
+    {
+      "timestamp": 6024,
+      "content": "l",
+      "type": "input"
+    },
+    {
+      "timestamp": 6248,
+      "content": "p",
+      "type": "input"
+    },
+    {
+      "timestamp": 6498,
+      "content": "\r\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 6548,
+      "content": "Available commands: ls, pwd, date, whoami, help, echo, clear, exit\r\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 6605,
+      "content": "Recording Terminal $ ",
+      "type": "output"
+    },
+    {
+      "timestamp": 8240,
+      "content": "l",
+      "type": "input"
+    },
+    {
+      "timestamp": 8321,
+      "content": "s",
+      "type": "input"
+    },
+    {
+      "timestamp": 8464,
+      "content": "\r\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 8514,
+      "content": "example.txt  package.json  src  test-recording.pcr\r\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 8574,
+      "content": "Recording Terminal $ ",
+      "type": "output"
+    },
+    {
+      "timestamp": 17464,
+      "content": "d",
+      "type": "input"
+    },
+    {
+      "timestamp": 17624,
+      "content": "a",
+      "type": "input"
+    },
+    {
+      "timestamp": 17744,
+      "content": "t",
+      "type": "input"
+    },
+    {
+      "timestamp": 17912,
+      "content": "e",
+      "type": "input"
+    },
+    {
+      "timestamp": 18368,
+      "content": "\r\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 18418,
+      "content": "Tue Aug 26 2025 14:15:20 GMT-0400 (Eastern Daylight Time)\r\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 18477,
+      "content": "Recording Terminal $ ",
+      "type": "output"
+    }
+  ],
+  "terminalInfo": {
+    "name": "Pure Cinema Recording Terminal",
+    "cwd": "C:\\Users\\edgrz\\AppData\\Local\\Programs\\Microsoft VS Code",
+    "shellPath": "cmd.exe"
+  },
+  "endTime": 1756232131871
+}

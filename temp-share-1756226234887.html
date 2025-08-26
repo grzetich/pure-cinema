@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pure Cinema Recording</title>
+    <meta name="description" content="Terminal recording created with Pure Cinema VS Code extension">
+    <meta property="og:title" content="Terminal Recording - Pure Cinema">
+    <meta property="og:description" content="Interactive terminal session recording">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Terminal Recording - Pure Cinema">
+    <meta name="twitter:description" content="Interactive terminal session recording">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            border-bottom: 1px solid #333333;
+        }
+        
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 28px;
+        }
+        
+        .header p {
+            margin: 0;
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .recording-info {
+            background-color: #2d2d2d;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #333333;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+        
+        .info-item {
+            flex: 1;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        
+        .controls {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            background-color: #2d2d2d;
+            border-radius: 8px;
+            border: 1px solid #333333;
+        }
+        
+        button {
+            background-color: #007acc;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            background-color: #005a9e;
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .progress-container {
+            flex: 1;
+            margin: 0 15px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: #333333;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #007acc;
+            border-radius: 3px;
+            transition: width 0.1s ease;
+        }
+        
+        
+        .terminal-container {
+            max-width: 100%;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .terminal-output {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', Consolas, 'Liberation Mono', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            overflow: auto;
+            border: 1px solid #333333;
+            min-height: 400px;
+            user-select: text;
+        }
+        
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #d4d4d4;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.2s;
+        }
+        
+        .copy-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .share-buttons {
+            margin-top: 20px;
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid #333333;
+        }
+        
+        .share-button {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        
+        .share-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .share-twitter {
+            background-color: #1da1f2;
+            color: white;
+        }
+        
+        .share-linkedin {
+            background-color: #0077b5;
+            color: white;
+        }
+        
+        .share-github {
+            background-color: #333;
+            color: white;
+        }
+        
+        .share-dev {
+            background-color: #0a0a0a;
+            color: white;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #333333;
+            padding-top: 20px;
+        }
+        
+        .footer a {
+            color: #007acc;
+            text-decoration: none;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .recording-info {
+                flex-direction: column;
+                text-align: left;
+            }
+            
+            .info-item {
+                margin-bottom: 10px;
+            }
+            
+            .controls {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎬 Terminal Recording</h1>
+        <p>Created with Pure Cinema for VS Code</p>
+    </div>
+    
+    <div class="recording-info">
+        <div class="info-item">
+            <span class="info-label">Duration</span>
+            <span>32.6s</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Dimensions</span>
+            <span>70 × 24</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Terminal</span>
+            <span>powershell</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Frames</span>
+            <span>0</span>
+        </div>
+    </div>
+    
+    
+    <div class="controls">
+        <button id="playBtn">▶ Play</button>
+        <button id="pauseBtn" disabled>⏸ Pause</button>
+        <button id="resetBtn">⏮ Reset</button>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+        <span id="timeDisplay">0.0s / 32.6s</span>
+    </div>
+    
+    
+    <div class="terminal-container">
+        <div class="terminal-output" id="terminalOutput"></div>
+        <button class="copy-button" onclick="copyToClipboard()">📋 Copy</button>
+    </div>
+    
+    <div class="share-buttons">
+        <h3>Share This Recording</h3>
+        <a href="#" class="share-button share-twitter" onclick="shareToTwitter()">📱 Twitter</a>
+        <a href="#" class="share-button share-linkedin" onclick="shareToLinkedIn()">💼 LinkedIn</a>
+        <a href="#" class="share-button share-github" onclick="shareToGitHub()">🐙 GitHub</a>
+        <a href="#" class="share-button share-dev" onclick="shareToDevTo()">👩‍💻 DEV</a>
+    </div>
+    
+    <div class="footer">
+        <p>Recording created with <a href="https://github.com/pure-cinema/pure-cinema" target="_blank">Pure Cinema</a> • 
+           <a href="https://marketplace.visualstudio.com/items?itemName=pure-cinema" target="_blank">Get the VS Code Extension</a></p>
+    </div>
+
+    <script>
+        const recording = {"version":"1.0","startTime":1756225436784,"frames":[],"terminalInfo":{"name":"powershell"},"endTime":1756225469409,"dimensions":{"width":70,"height":24}};
+        
+        let isPlaying = false;
+        let currentFrame = 0;
+        let outputContent = '';
+        
+        
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const terminalOutput = document.getElementById('terminalOutput');
+        
+        function updateDisplay() {
+            terminalOutput.textContent = outputContent;
+            
+            if (recording.frames.length > 0) {
+                const progress = (currentFrame / recording.frames.length) * 100;
+                progressFill.style.width = progress + '%';
+                
+                const currentTime = currentFrame > 0 ? (recording.frames[currentFrame - 1].timestamp / 1000).toFixed(1) : '0.0';
+                const totalTime = ((recording.endTime - recording.startTime) / 1000).toFixed(1);
+                timeDisplay.textContent = currentTime + 's / ' + totalTime + 's';
+            }
+        }
+        
+        function playRecording() {
+            if (currentFrame >= recording.frames.length) {
+                isPlaying = false;
+                playBtn.disabled = false;
+                pauseBtn.disabled = true;
+                return;
+            }
+            
+            const frame = recording.frames[currentFrame];
+            if (frame.type === 'output' || frame.type === 'input') {
+                outputContent += frame.content;
+            }
+            
+            currentFrame++;
+            updateDisplay();
+            
+            if (isPlaying && currentFrame < recording.frames.length) {
+                const nextFrame = recording.frames[currentFrame];
+                const delay = Math.max(1, nextFrame.timestamp - frame.timestamp);
+                
+                setTimeout(() => {
+                    if (isPlaying) {
+                        playRecording();
+                    }
+                }, delay);
+            } else if (currentFrame >= recording.frames.length) {
+                isPlaying = false;
+                playBtn.disabled = false;
+                pauseBtn.disabled = true;
+            }
+        }
+        
+        playBtn.addEventListener('click', () => {
+            isPlaying = true;
+            playBtn.disabled = true;
+            pauseBtn.disabled = false;
+            playRecording();
+        });
+        
+        pauseBtn.addEventListener('click', () => {
+            isPlaying = false;
+            playBtn.disabled = false;
+            pauseBtn.disabled = true;
+        });
+        
+        resetBtn.addEventListener('click', () => {
+            isPlaying = false;
+            currentFrame = 0;
+            outputContent = '';
+            playBtn.disabled = false;
+            pauseBtn.disabled = true;
+            updateDisplay();
+        });
+        
+        progressBar.addEventListener('click', (e) => {
+            const rect = progressBar.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const progress = clickX / rect.width;
+            
+            currentFrame = Math.floor(progress * recording.frames.length);
+            
+            outputContent = '';
+            for (let i = 0; i < currentFrame; i++) {
+                const frame = recording.frames[i];
+                if (frame.type === 'output' || frame.type === 'input') {
+                    outputContent += frame.content;
+                }
+            }
+            
+            updateDisplay();
+        });
+        
+        
+        function copyToClipboard() {
+            const content = document.getElementById('terminalOutput').textContent;
+            navigator.clipboard.writeText(content).then(() => {
+                const btn = document.querySelector('.copy-button');
+                const original = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    btn.textContent = original;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+        
+        function shareToTwitter() {
+            const text = "Check out this terminal recording created with Pure Cinema! 🎬";
+            const url = window.location.href;
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+        }
+        
+        function shareToLinkedIn() {
+            const url = window.location.href;
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
+        }
+        
+        function shareToGitHub() {
+            // For GitHub, we'll copy the URL to clipboard and show instructions
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert('URL copied to clipboard! You can now paste it in your GitHub issue, PR, or README.');
+            });
+        }
+        
+        function shareToDevTo() {
+            const title = "Terminal Recording - Pure Cinema";
+            const url = window.location.href;
+            window.open(`https://dev.to/new?prefill=---%0Atitle: ${encodeURIComponent(title)}%0Apublished: false%0A---%0A%0ACheck out this terminal recording: ${encodeURIComponent(url)}`, '_blank');
+        }
+        
+        // Initialize display
+        updateDisplay();
+        
+        function showStaticContent() {
+            const output = recording.frames
+                .filter(frame => frame.type === 'output')
+                .map(frame => frame.content)
+                .join('');
+            document.getElementById('terminalOutput').textContent = output;
+        }
+    </script>
+</body>
+</html>

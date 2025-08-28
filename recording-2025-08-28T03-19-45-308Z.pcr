@@ -1,0 +1,212 @@
+{
+  "version": "1.0",
+  "startTime": 1756351167620,
+  "frames": [
+    {
+      "timestamp": 95,
+      "content": "C:\\Users\\edgrz>",
+      "type": "output"
+    },
+    {
+      "timestamp": 3155,
+      "content": "e",
+      "type": "input"
+    },
+    {
+      "timestamp": 3346,
+      "content": "c",
+      "type": "input"
+    },
+    {
+      "timestamp": 3458,
+      "content": "h",
+      "type": "input"
+    },
+    {
+      "timestamp": 3674,
+      "content": "o",
+      "type": "input"
+    },
+    {
+      "timestamp": 4098,
+      "content": "e",
+      "type": "input"
+    },
+    {
+      "timestamp": 4186,
+      "content": " ",
+      "type": "input"
+    },
+    {
+      "timestamp": 4826,
+      "content": "\b",
+      "type": "input"
+    },
+    {
+      "timestamp": 4971,
+      "content": "\b",
+      "type": "input"
+    },
+    {
+      "timestamp": 5066,
+      "content": " ",
+      "type": "input"
+    },
+    {
+      "timestamp": 5610,
+      "content": "\"",
+      "type": "input"
+    },
+    {
+      "timestamp": 6514,
+      "content": "h",
+      "type": "input"
+    },
+    {
+      "timestamp": 6626,
+      "content": "e",
+      "type": "input"
+    },
+    {
+      "timestamp": 6771,
+      "content": "l",
+      "type": "input"
+    },
+    {
+      "timestamp": 6938,
+      "content": "l",
+      "type": "input"
+    },
+    {
+      "timestamp": 7138,
+      "content": "o",
+      "type": "input"
+    },
+    {
+      "timestamp": 7834,
+      "content": "\"",
+      "type": "input"
+    },
+    {
+      "timestamp": 8283,
+      "content": "\r\n",
+      "type": "input"
+    },
+    {
+      "timestamp": 8285,
+      "content": "\"hello\"\r\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 8286,
+      "content": "\r\nC:\\Users\\edgrz>",
+      "type": "output"
+    },
+    {
+      "timestamp": 9315,
+      "content": "e",
+      "type": "input"
+    },
+    {
+      "timestamp": 9562,
+      "content": "c",
+      "type": "input"
+    },
+    {
+      "timestamp": 9738,
+      "content": "h",
+      "type": "input"
+    },
+    {
+      "timestamp": 10194,
+      "content": "o",
+      "type": "input"
+    },
+    {
+      "timestamp": 10419,
+      "content": " ",
+      "type": "input"
+    },
+    {
+      "timestamp": 10698,
+      "content": "\"",
+      "type": "input"
+    },
+    {
+      "timestamp": 11155,
+      "content": "h",
+      "type": "input"
+    },
+    {
+      "timestamp": 11298,
+      "content": "e",
+      "type": "input"
+    },
+    {
+      "timestamp": 11555,
+      "content": "l",
+      "type": "input"
+    },
+    {
+      "timestamp": 11562,
+      "content": "k",
+      "type": "input"
+    },
+    {
+      "timestamp": 11746,
+      "content": "l",
+      "type": "input"
+    },
+    {
+      "timestamp": 12419,
+      "content": "p",
+      "type": "input"
+    },
+    {
+      "timestamp": 12882,
+      "content": "\b",
+      "type": "input"
+    },
+    {
+      "timestamp": 13050,
+      "content": "\b",
+      "type": "input"
+    },
+    {
+      "timestamp": 13218,
+      "content": "\b",
+      "type": "input"
+    },
+    {
+      "timestamp": 13690,
+      "content": "l",
+      "type": "input"
+    },
+    {
+      "timestamp": 14074,
+      "content": "o",
+      "type": "input"
+    },
+    {
+      "timestamp": 14594,
+      "content": "\"",
+      "type": "input"
+    },
+    {
+      "timestamp": 14994,
+      "content": "\r\n",
+      "type": "input"
+    },
+    {
+      "timestamp": 14997,
+      "content": "\"hello\"\r\n\r\nC:\\Users\\edgrz>",
+      "type": "output"
+    }
+  ],
+  "terminalInfo": {
+    "name": "Pure Cinema Recording Terminal",
+    "cwd": "C:\\Users\\edgrz",
+    "shellPath": "cmd.exe"
+  },
+  "endTime": 1756351185307
+}

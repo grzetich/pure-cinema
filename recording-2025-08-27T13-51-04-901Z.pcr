@@ -1,0 +1,57 @@
+{
+  "version": "1.0",
+  "startTime": 1756302647623,
+  "frames": [
+    {
+      "timestamp": 94,
+      "content": "C:\\Users\\edgrz>",
+      "type": "output"
+    },
+    {
+      "timestamp": 4482,
+      "content": "\b",
+      "type": "input"
+    },
+    {
+      "timestamp": 4618,
+      "content": "\b",
+      "type": "input"
+    },
+    {
+      "timestamp": 7090,
+      "content": "\b",
+      "type": "input"
+    },
+    {
+      "timestamp": 7874,
+      "content": "\r",
+      "type": "input"
+    },
+    {
+      "timestamp": 7875,
+      "content": "echo --\b\b\"hellop\b\"\n--\b\b\"hellop\b\"\r\n\r\nC:\\Users\\edgrz>",
+      "type": "output"
+    },
+    {
+      "timestamp": 12834,
+      "content": "\b",
+      "type": "input"
+    },
+    {
+      "timestamp": 14674,
+      "content": "\r",
+      "type": "input"
+    },
+    {
+      "timestamp": 14675,
+      "content": "\recho \"hellp\bo\"\n\"hellp\bo\"\r\n\r\nC:\\Users\\edgrz>",
+      "type": "output"
+    }
+  ],
+  "terminalInfo": {
+    "name": "Pure Cinema Recording Terminal",
+    "cwd": "C:\\Users\\edgrz",
+    "shellPath": "cmd.exe"
+  },
+  "endTime": 1756302664900
+}

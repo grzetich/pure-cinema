@@ -141,23 +141,25 @@ export class RecordingPlayer implements vscode.Disposable {
         }
         
         .terminal-output {
-            background-color: #1e1e1e;
-            color: #d4d4d4;
+            background-color: #0f0f23;
+            color: #f8f8f2;
             padding: 20px;
-            border-radius: 5px;
-            font-family: 'Courier New', Consolas, 'Liberation Mono', monospace;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'SF Mono', Consolas, 'Liberation Mono', monospace;
             font-size: 14px;
-            line-height: 1.4;
+            line-height: 1.5;
             white-space: pre-wrap;
             overflow-y: auto;
             max-height: 600px;
-            border: 1px solid var(--vscode-panel-border);
+            border: 1px solid #44475a;
             user-select: text;
             cursor: text;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
         
         .terminal-output:hover {
-            border-color: var(--vscode-focusBorder);
+            border-color: #6272a4;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
         }
         
         .copy-button {

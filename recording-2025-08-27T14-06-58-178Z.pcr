@@ -1,0 +1,42 @@
+{
+  "version": "1.0",
+  "startTime": 1756303606809,
+  "frames": [
+    {
+      "timestamp": 94,
+      "content": "C:\\Users\\edgrz>",
+      "type": "output"
+    },
+    {
+      "timestamp": 5053,
+      "content": "echo \"hello\"\r",
+      "type": "input"
+    },
+    {
+      "timestamp": 5054,
+      "content": "\"hello\"\r\n\r\nC:\\Users\\edgrz>",
+      "type": "output"
+    },
+    {
+      "timestamp": 9309,
+      "content": "echo \"hello\"\r",
+      "type": "input"
+    },
+    {
+      "timestamp": 9310,
+      "content": "\"hello\"\r\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 9311,
+      "content": "\r\nC:\\Users\\edgrz>",
+      "type": "output"
+    }
+  ],
+  "terminalInfo": {
+    "name": "Pure Cinema Recording Terminal",
+    "cwd": "C:\\Users\\edgrz",
+    "shellPath": "cmd.exe"
+  },
+  "endTime": 1756303618177
+}

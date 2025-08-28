@@ -6,15 +6,21 @@
 ## Target Market/Audience: Software developers and vibe coders, especially those without deep technical experience that may have trouble setting up WSL and running asciicenema in it. 
 ## Features and Functionality:
 Features: Core functionalities and capabilities of the product:
-* Record terminal sessions from within Visual Studio Code.
-* Save in a compact file format.
-* Allow viewers to copy text out of recordings. 
+* **Real Shell Recording**: Record actual terminal sessions with real command execution (npm, git, etc.)
+* **Cross-Platform Support**: Works with cmd.exe on Windows, bash/zsh on macOS/Linux
+* **Workspace Trust Integration**: Requires trusted workspace for security compliance
+* **Transparent Security**: All commands visible to users with explicit consent
+* Save in a compact file format with rich terminal data (colors, formatting, timing)
+* Allow viewers to copy text out of recordings (real command output and errors)
 * Allow users to make minor edits to recordings:
-    * Change dimensions of recording.
-    * Change start end end points of recording and trim.
-* Allow users to export recordings in a format compatible with sharing on the Web and to socials.
-    * Include share to socials buttons.
-* Allow users to open and watch saved .pcr files.
+    * Change dimensions of recording
+    * Change start and end points of recording and trim
+    * Edit out sensitive information from real command sessions
+* Allow users to export recordings in a format compatible with sharing on the Web and to socials:
+    * Interactive HTML with real terminal colors and formatting
+    * Include share to socials buttons
+    * Generate documentation from real development workflows
+* Allow users to open and watch saved .pcr files with authentic playback
 ## User Stories/Use Cases 
  Software developers and vibe coders, especially those without deep technical experience that may have trouble setting up WSL and running asciicenema in it. 
 ## Design

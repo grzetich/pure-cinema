@@ -653,7 +653,86 @@ export class RecordingExporter implements vscode.Disposable {
     }
 
     private async shareToSocial(recording: Recording, platform: string, originalUri: vscode.Uri): Promise<void> {
-        // First export as HTML for sharing
+        const choice = await vscode.window.showQuickPick([
+            {
+                label: '🎬 Create Interactive Gist',
+                description: 'Upload interactive playback to GitHub Gist',
+                detail: 'Shareable URL with step-by-step terminal playback'
+            },
+            {
+                label: '🌐 Export Interactive HTML',
+                description: 'Generate HTML file for web hosting',
+                detail: 'Full-featured player for GitHub Pages, Netlify, etc.'
+            },
+            {
+                label: '📋 Copy Share Text',
+                description: 'Copy formatted text about this recording',
+                detail: 'Quick post with recording stats and extension link'
+            }
+        ], {
+            placeHolder: `Share your terminal recording to ${platform}`
+        });
+
+        if (!choice) return;
+
+        switch (choice.label) {
+            case '🎬 Create Interactive Gist':
+                await this.shareToGitHubGist(recording, platform, originalUri);
+                break;
+            case '🌐 Export Interactive HTML':
+                await this.exportHtmlForManualSharing(recording, platform, originalUri);
+                break;
+            case '📋 Copy Share Text':
+                await this.copyShareText(recording, platform);
+                break;
+        }
+    }
+
+    private async copyShareText(recording: Recording, platform: string): Promise<void> {
+        const duration = recording.endTime ? ((recording.endTime - recording.startTime) / 1000).toFixed(1) : '0.0';
+        const commandCount = recording.frames.filter(frame => frame.type === 'input').length;
+        
+        const shareText = `🎬 Just recorded a ${duration}s terminal session with ${commandCount} commands using Pure Cinema!
+
+✨ Interactive terminal recordings right in VS Code
+🔗 Perfect for tutorials, debugging demos, and sharing workflows
+📋 Copy-able output + timing information
+
+Get Pure Cinema: https://marketplace.visualstudio.com/items?itemName=pure-cinema
+
+#coding #terminal #vscode #developer #tools`;
+
+        await vscode.env.clipboard.writeText(shareText);
+        
+        const platformUrls: { [key: string]: string } = {
+            'twitter': 'https://twitter.com/intent/tweet',
+            'linkedin': 'https://www.linkedin.com/feed/',
+            'github': 'https://github.com',
+            'dev.to': 'https://dev.to/new'
+        };
+
+        const openChoice = await vscode.window.showInformationMessage(
+            `Share text copied to clipboard! This promotes the recording concept rather than just copying terminal output.`,
+            `Open ${platform.charAt(0).toUpperCase() + platform.slice(1)}`
+        );
+
+        if (openChoice && platformUrls[platform]) {
+            vscode.env.openExternal(vscode.Uri.parse(platformUrls[platform]));
+        }
+    }
+
+    private async shareToGitHubGist(recording: Recording, platform: string, originalUri: vscode.Uri): Promise<void> {
+        vscode.window.showInformationMessage(
+            'GitHub Gist sharing is not yet implemented. This would require GitHub authentication and API integration.',
+            'Learn More'
+        ).then(choice => {
+            if (choice === 'Learn More') {
+                vscode.env.openExternal(vscode.Uri.parse('https://docs.github.com/en/rest/gists/gists'));
+            }
+        });
+    }
+
+    private async exportHtmlForManualSharing(recording: Recording, platform: string, originalUri: vscode.Uri): Promise<void> {
         const exportOptions: ExportOptions = {
             format: 'html',
             includeControls: true,
@@ -661,45 +740,27 @@ export class RecordingExporter implements vscode.Disposable {
             socialPlatform: platform as any
         };
 
-        const tempHtmlPath = path.join(path.dirname(originalUri.fsPath), `temp-share-${Date.now()}.html`);
+        const baseName = path.basename(originalUri.fsPath, '.pcr');
+        const htmlPath = path.join(path.dirname(originalUri.fsPath), `${baseName}-share.html`);
         const htmlContent = this.generateHtmlExport(recording, exportOptions);
         
         try {
-            await fs.promises.writeFile(tempHtmlPath, htmlContent, 'utf8');
+            await fs.promises.writeFile(htmlPath, htmlContent, 'utf8');
             
-            let shareUrl = '';
-            const fileUrl = vscode.Uri.file(tempHtmlPath).toString();
-            
-            // Note: In a real implementation, you'd need to upload to a hosting service
-            // For now, we'll show instructions
-            
-            switch (platform) {
-                case 'twitter':
-                    vscode.window.showInformationMessage(
-                        'To share on Twitter: Upload the HTML file to a web hosting service, then share the URL.',
-                        'Open HTML File'
-                    ).then(choice => {
-                        if (choice === 'Open HTML File') {
-                            vscode.env.openExternal(vscode.Uri.file(tempHtmlPath));
-                        }
-                    });
-                    break;
-                case 'github':
-                    vscode.window.showInformationMessage(
-                        'To share on GitHub: Upload the HTML file to GitHub Pages or include it in your repository.',
-                        'Open HTML File'
-                    ).then(choice => {
-                        if (choice === 'Open HTML File') {
-                            vscode.env.openExternal(vscode.Uri.file(tempHtmlPath));
-                        }
-                    });
-                    break;
-                default:
-                    vscode.env.openExternal(vscode.Uri.file(tempHtmlPath));
-            }
+            await vscode.window.showInformationMessage(
+                `HTML file created! Upload to GitHub Pages, Netlify, or any web host, then share the URL on ${platform}.`,
+                'Open HTML File',
+                'Open Folder'
+            ).then(choice => {
+                if (choice === 'Open HTML File') {
+                    vscode.env.openExternal(vscode.Uri.file(htmlPath));
+                } else if (choice === 'Open Folder') {
+                    vscode.env.openExternal(vscode.Uri.file(path.dirname(htmlPath)));
+                }
+            });
             
         } catch (error) {
-            vscode.window.showErrorMessage(`Failed to prepare file for sharing: ${error}`);
+            vscode.window.showErrorMessage(`Failed to create HTML file: ${error}`);
         }
     }
 

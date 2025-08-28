@@ -1,105 +1,130 @@
 {
   "version": "1.0",
-  "startTime": 1756232101775,
+  "startTime": 1756299951517,
   "frames": [
     {
-      "timestamp": 63,
-      "content": "Recording Terminal $ ",
+      "timestamp": 93,
+      "content": "C:\\Users\\edgrz\\AppData\\Local\\Programs\\Microsoft VS Code>",
       "type": "output"
     },
     {
-      "timestamp": 5785,
-      "content": "h",
+      "timestamp": 4244,
+      "content": "\r",
       "type": "input"
     },
     {
-      "timestamp": 5889,
-      "content": "e",
-      "type": "input"
-    },
-    {
-      "timestamp": 6024,
-      "content": "l",
-      "type": "input"
-    },
-    {
-      "timestamp": 6248,
-      "content": "p",
-      "type": "input"
-    },
-    {
-      "timestamp": 6498,
-      "content": "\r\n",
+      "timestamp": 4244,
+      "content": "npm --version\n",
       "type": "output"
     },
     {
-      "timestamp": 6548,
-      "content": "Available commands: ls, pwd, date, whoami, help, echo, clear, exit\r\n",
+      "timestamp": 4489,
+      "content": "10.9.3\n",
       "type": "output"
     },
     {
-      "timestamp": 6605,
-      "content": "Recording Terminal $ ",
+      "timestamp": 4497,
+      "content": "\r\nC:\\Users\\edgrz\\AppData\\Local\\Programs\\Microsoft VS Code>",
       "type": "output"
     },
     {
-      "timestamp": 8240,
-      "content": "l",
+      "timestamp": 7714,
+      "content": "\r",
       "type": "input"
     },
     {
-      "timestamp": 8321,
-      "content": "s",
-      "type": "input"
-    },
-    {
-      "timestamp": 8464,
-      "content": "\r\n",
+      "timestamp": 7715,
+      "content": "\rls\n",
       "type": "output"
     },
     {
-      "timestamp": 8514,
-      "content": "example.txt  package.json  src  test-recording.pcr\r\n",
+      "timestamp": 7716,
+      "content": "'ls' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n",
       "type": "output"
     },
     {
-      "timestamp": 8574,
-      "content": "Recording Terminal $ ",
+      "timestamp": 7717,
+      "content": "\r\nC:\\Users\\edgrz\\AppData\\Local\\Programs\\Microsoft VS Code>",
       "type": "output"
     },
     {
-      "timestamp": 17464,
-      "content": "d",
+      "timestamp": 10330,
+      "content": "\r",
       "type": "input"
     },
     {
-      "timestamp": 17624,
-      "content": "a",
-      "type": "input"
-    },
-    {
-      "timestamp": 17744,
-      "content": "t",
-      "type": "input"
-    },
-    {
-      "timestamp": 17912,
-      "content": "e",
-      "type": "input"
-    },
-    {
-      "timestamp": 18368,
-      "content": "\r\n",
+      "timestamp": 10331,
+      "content": "\rdir\n",
       "type": "output"
     },
     {
-      "timestamp": 18418,
-      "content": "Tue Aug 26 2025 14:15:20 GMT-0400 (Eastern Daylight Time)\r\n",
+      "timestamp": 10332,
+      "content": " Volume in drive C has no label.\r\n Volume Serial Number is 16C8-7143\r\n\r\n Directory of C:\\Users\\edgrz\\AppData\\Local\\Programs\\Microsoft VS Code\r\n\r\n08/02/2025  09:47 PM    <DIR>          .\r\n",
       "type": "output"
     },
     {
-      "timestamp": 18477,
-      "content": "Recording Terminal $ ",
+      "timestamp": 10332,
+      "content": "10/06/2024  05:40 PM    <DIR>          ..\r\n07/26/2025  06:33 PM    <DIR>          bin\r\n07/22/2025  01:49 PM           147,743 chrome_100_percent.pak\r\n07/22/2025  01:49 PM           220,631 chrome_200_percent.pak\r\n07/22/2025  01:52 PM       192,451,144 Code.exe\r\n07/22/2025  01:49 PM               367 Code.VisualElementsManifest.xml\r\n07/22/2025  01:51 PM         4,927,168 d3dcompiler_47.dll\r\n07/22/2025  01:51 PM         2,862,232 ffmpeg.dll\r\n07/22/2025  01:49 PM        10,466,624 icudtl.dat\r\n07/22/2025  01:51 PM           513,696 libEGL.dll\r\n07/22/2025  01:54 PM         8,040,552 libGLESv2.dll\r\n07/22/2025  01:49 PM        12,098,947 LICENSES.chromium.html\r\n07/26/2025  06:33 PM    <DIR>          locales\r\n07/26/2025  06:33 PM    <DIR>          policies\r\n07/22/2025  12:04 PM    <DIR>          resources\r\n07/22/2025  01:49 PM         5,738,492 resources.pak\r\n07/22/2025  01:49 PM           331,874 snapshot_blob.bin\r\n07/26/2025  06:33 PM    <DIR>          tools\r\n08/02/2025  09:47 PM           974,639 unins000.dat\r\n07/26/2025  06:33 PM         3,494,960 unins000.exe\r\n07/26/2025  06:33 PM            24,367 unins000.msg\r\n07/22/2025  01:49 PM           702,157 v8_context_snapshot.bin\r\n07/22/2025  01:51 PM         5,598,360 vk_swiftshader.dll\r\n07/22/2025  01:49 PM               106 vk_swiftshader_icd.json\r\n07/22/2025  01:51 PM           924,320 vulkan-1.dll\r\n              19 File(s)    249,518,379 bytes\r\n               7 Dir(s)  80,792,100,864 bytes free\r\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 10333,
+      "content": "\r\nC:\\Users\\edgrz\\AppData\\Local\\Programs\\Microsoft VS Code>",
+      "type": "output"
+    },
+    {
+      "timestamp": 14434,
+      "content": "\r",
+      "type": "input"
+    },
+    {
+      "timestamp": 14435,
+      "content": "\rcd ..\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 14436,
+      "content": "\r\nC:\\Users\\edgrz\\AppData\\Local\\Programs>",
+      "type": "output"
+    },
+    {
+      "timestamp": 16402,
+      "content": "\r",
+      "type": "input"
+    },
+    {
+      "timestamp": 16403,
+      "content": "\rdir\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 16404,
+      "content": " Volume in drive C has no label.\r\n Volume Serial Number is 16C8-7143\r\n\r\n Directory of C:\\Users\\edgrz\\AppData\\Local\\Programs\r\n\r\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 16404,
+      "content": "10/06/2024  05:40 PM    <DIR>          .\r\n08/26/2025  07:21 PM    <DIR>          ..\r\n11/15/2020  11:03 PM    <DIR>          Common\r\n11/30/2022  10:19 PM    <DIR>          Cricut Design Space\r\n08/19/2025  12:37 AM    <DIR>          Evernote\r\n12/20/2020  12:26 AM    <DIR>          evernote-client\r\n08/02/2025  09:47 PM    <DIR>          Microsoft VS Code\r\n               0 File(s)              0 bytes\r\n               7 Dir(s)  80,792,035,328 bytes free\r\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 16404,
+      "content": "\r\nC:\\Users\\edgrz\\AppData\\Local\\Programs>",
+      "type": "output"
+    },
+    {
+      "timestamp": 21779,
+      "content": "\r",
+      "type": "input"
+    },
+    {
+      "timestamp": 21780,
+      "content": "\rcd ../../..\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 21781,
+      "content": "\r\nC:\\Users\\edgrz>",
       "type": "output"
     }
   ],
@@ -108,5 +133,5 @@
     "cwd": "C:\\Users\\edgrz\\AppData\\Local\\Programs\\Microsoft VS Code",
     "shellPath": "cmd.exe"
   },
-  "endTime": 1756232131871
+  "endTime": 1756299981204
 }

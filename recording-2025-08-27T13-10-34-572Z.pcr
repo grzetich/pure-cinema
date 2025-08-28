@@ -1,0 +1,167 @@
+{
+  "version": "1.0",
+  "startTime": 1756300156549,
+  "frames": [
+    {
+      "timestamp": 101,
+      "content": "C:\\Users\\edgrz>",
+      "type": "output"
+    },
+    {
+      "timestamp": 2299,
+      "content": "\r",
+      "type": "input"
+    },
+    {
+      "timestamp": 2299,
+      "content": "ls\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 2301,
+      "content": "'ls' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 2301,
+      "content": "\r\nC:\\Users\\edgrz>",
+      "type": "output"
+    },
+    {
+      "timestamp": 4194,
+      "content": "\r",
+      "type": "input"
+    },
+    {
+      "timestamp": 4195,
+      "content": "\rdir\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 4196,
+      "content": " Volume in drive C has no label.\r\n Volume Serial Number is 16C8-7143\r\n\r\n Directory of C:\\Users\\edgrz\r\n\r\n08/27/2025  09:08 AM    <DIR>          .\r\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 4196,
+      "content": "07/19/2025  08:36 PM    <DIR>          ..\r\n08/14/2025  12:29 AM               270 .bash_history\r\n07/04/2021  02:33 PM    <DIR>          .battlescribe\r\n08/27/2025  08:51 AM    <DIR>          .claude\r\n08/27/2025  09:08 AM           246,052 .claude.json\r\n08/27/2025  09:07 AM           245,866 .claude.json.backup\r\n08/22/2025  04:58 PM    <DIR>          .config\r\n02/13/2022  07:59 PM    <DIR>          .cricut-design-space\r\n05/06/2021  07:16 PM    <DIR>          .dbus-keyrings\r\n08/20/2025  11:44 PM    <DIR>          .gemini\r\n07/23/2025  04:51 AM                53 .git-for-windows-updater\r\n07/22/2025  12:06 PM                38 .gitconfig\r\n07/08/2022  03:58 PM    <DIR>          .ms-ad\r\n08/18/2025  12:39 AM                30 .node_repl_history\r\n11/08/2020  10:07 PM    <DIR>          .Origin\r\n11/08/2020  10:07 PM    <DIR>          .QtWebEngineProcess\r\n08/12/2025  03:13 PM               886 .viminfo\r\n07/22/2025  10:41 AM    <DIR>          .vscode\r\n11/08/2020  08:19 PM    <DIR>          3D Objects\r\n11/08/2020  09:58 PM    <DIR>          ansel\r\n07/04/2021  02:33 PM    <DIR>          BattleScribe\r\n12/09/2024  12:09 AM    <DIR>          Contacts\r\n08/12/2025  03:15 PM    <DIR>          CrossDevice\r\n07/22/2025  12:44 PM    <DIR>          Desktop\r\n11/09/2020  12:27 AM    <DIR>          Documents\r\n08/26/2025  02:27 PM    <DIR>          Downloads\r\n12/09/2024  12:09 AM    <DIR>          Favorites\r\n08/23/2025  10:48 AM    <DIR>          lib\r\n12/09/2024  12:09 AM    <DIR>          Links\r\n12/09/2024  12:09 AM    <DIR>          Music\r\n02/14/2025  08:27 PM    <DIR>          OneDrive\r\n12/09/2024  12:09 AM    <DIR>          Saved Games\r\n08/04/2025  10:18 PM    <DIR>          Searches\r\n10/10/2021  11:23 PM    <DIR>          ubisoft\r\n08/13/2025  12:49 AM    <DIR>          Videos\r\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 4197,
+      "content": "               7 File(s)        493,195 bytes\r\n              29 Dir(s)  80,794,652,672 bytes free\r\n\r\nC:\\Users\\edgrz>",
+      "type": "output"
+    },
+    {
+      "timestamp": 6290,
+      "content": "\r",
+      "type": "input"
+    },
+    {
+      "timestamp": 6291,
+      "content": "\rcd lib\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 6292,
+      "content": "\r\nC:\\Users\\edgrz\\lib>",
+      "type": "output"
+    },
+    {
+      "timestamp": 8193,
+      "content": "\r",
+      "type": "input"
+    },
+    {
+      "timestamp": 8194,
+      "content": "\rdir\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 8195,
+      "content": " Volume in drive C has no label.\r\n Volume Serial Number is 16C8-7143\r\n\r\n Directory of C:\\Users\\edgrz\\lib\r\n\r\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 8195,
+      "content": "08/23/2025  10:48 AM    <DIR>          .\r\n08/27/2025  09:08 AM    <DIR>          ..\r\n08/12/2025  01:13 PM    <DIR>          amplify-ui-help-panel\r\n08/24/2025  11:21 PM    <DIR>          analyzeclaude\r\n07/22/2025  12:20 PM    <DIR>          cyclesignal\r\n08/04/2025  10:58 PM    <DIR>          devbrowser\r\n08/23/2025  11:33 AM    <DIR>          draftai\r\n08/06/2025  11:34 PM    <DIR>          pokemon-tcg-mcp\r\n08/01/2025  10:48 PM    <DIR>          portfolio\r\n08/27/2025  08:53 AM    <DIR>          pure-cinema\r\n07/22/2025  12:20 PM    <DIR>          roguespot\r\n08/16/2025  08:20 PM    <DIR>          uxcopy\r\n08/16/2025  02:41 PM    <DIR>          v-r\r\n08/26/2025  11:57 AM    <DIR>          viberater\r\n               0 File(s)              0 bytes\r\n              14 Dir(s)  80,794,652,672 bytes free\r\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 8196,
+      "content": "\r\nC:\\Users\\edgrz\\lib>",
+      "type": "output"
+    },
+    {
+      "timestamp": 12514,
+      "content": "\r",
+      "type": "input"
+    },
+    {
+      "timestamp": 12515,
+      "content": "\rnpm --version\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 12751,
+      "content": "10.9.3\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 12759,
+      "content": "\r\nC:\\Users\\edgrz\\lib>",
+      "type": "output"
+    },
+    {
+      "timestamp": 51834,
+      "content": "\r",
+      "type": "input"
+    },
+    {
+      "timestamp": 51835,
+      "content": "\recho \"hel;\n\"hel;\r\n\r\nC:\\Users\\edgrz\\lib>",
+      "type": "output"
+    },
+    {
+      "timestamp": 62138,
+      "content": "\r",
+      "type": "input"
+    },
+    {
+      "timestamp": 62139,
+      "content": "\recho \"hellpo\"\n\"hellpo\"\r\n\r\nC:\\Users\\edgrz\\lib>",
+      "type": "output"
+    },
+    {
+      "timestamp": 69458,
+      "content": "\r",
+      "type": "input"
+    },
+    {
+      "timestamp": 69459,
+      "content": "\recho \"hellp\"\n\"hellp\"\r\n\r\nC:\\Users\\edgrz\\lib>",
+      "type": "output"
+    },
+    {
+      "timestamp": 74146,
+      "content": "\r",
+      "type": "input"
+    },
+    {
+      "timestamp": 74147,
+      "content": "\recho \"hello\"\n\"hello\"\r\n",
+      "type": "output"
+    },
+    {
+      "timestamp": 74147,
+      "content": "\r\nC:\\Users\\edgrz\\lib>",
+      "type": "output"
+    }
+  ],
+  "terminalInfo": {
+    "name": "Pure Cinema Recording Terminal",
+    "cwd": "C:\\Users\\edgrz",
+    "shellPath": "cmd.exe"
+  },
+  "endTime": 1756300234571
+}

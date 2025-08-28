@@ -194,6 +194,10 @@ export class RecordingPlayer implements vscode.Disposable {
             <button id="playBtn">▶ Play</button>
             <button id="pauseBtn" disabled>⏸ Pause</button>
             <button id="resetBtn">⏮ Reset</button>
+            <label style="display: flex; align-items: center; gap: 5px; margin-left: 10px;">
+                <input type="checkbox" id="removeDeadTimeToggle" style="margin: 0;">
+                <span style="font-size: 12px; color: var(--vscode-descriptionForeground);">Remove extra time between keypresses</span>
+            </label>
             <div class="progress-container">
                 <div class="progress-bar" id="progressBar">
                     <div class="progress-fill" id="progressFill"></div>
@@ -211,16 +215,18 @@ export class RecordingPlayer implements vscode.Disposable {
 
     <script>
         const vscode = acquireVsCodeApi();
-        const recording = ${JSON.stringify(recording)};
+        const originalRecording = ${JSON.stringify(recording)};
         
         let isPlaying = false;
         let currentFrame = 0;
         let playbackSpeed = 1.0;
         let animationId = null;
+        let processedRecording = originalRecording;
         
         const playBtn = document.getElementById('playBtn');
         const pauseBtn = document.getElementById('pauseBtn');
         const resetBtn = document.getElementById('resetBtn');
+        const removeDeadTimeToggle = document.getElementById('removeDeadTimeToggle');
         const progressBar = document.getElementById('progressBar');
         const progressFill = document.getElementById('progressFill');
         const timeDisplay = document.getElementById('timeDisplay');
@@ -229,28 +235,76 @@ export class RecordingPlayer implements vscode.Disposable {
         
         let outputContent = '';
         
+        function removeDeadTime(frames) {
+            if (frames.length <= 1) {
+                return frames;
+            }
+
+            const processedFrames = [];
+            const DEAD_TIME_THRESHOLD = 3000; // 3 seconds of inactivity
+            const MAX_PAUSE_DURATION = 1000;  // Compress long pauses to max 1 second
+            
+            let cumulativeTimeReduction = 0;
+            
+            for (let i = 0; i < frames.length; i++) {
+                const currentFrame = frames[i];
+                const adjustedFrame = {
+                    ...currentFrame,
+                    timestamp: currentFrame.timestamp - cumulativeTimeReduction
+                };
+                
+                processedFrames.push(adjustedFrame);
+                
+                // Check for dead time between this frame and the next
+                if (i < frames.length - 1) {
+                    const nextFrame = frames[i + 1];
+                    const timeBetweenFrames = nextFrame.timestamp - currentFrame.timestamp;
+                    
+                    if (timeBetweenFrames > DEAD_TIME_THRESHOLD) {
+                        // Compress the dead time
+                        const timeReduction = timeBetweenFrames - MAX_PAUSE_DURATION;
+                        cumulativeTimeReduction += timeReduction;
+                    }
+                }
+            }
+            
+            return processedFrames;
+        }
+        
+        function updateProcessedRecording() {
+            if (removeDeadTimeToggle.checked) {
+                processedRecording = {
+                    ...originalRecording,
+                    frames: removeDeadTime(originalRecording.frames)
+                };
+            } else {
+                processedRecording = originalRecording;
+            }
+        }
+        
         function updateDisplay() {
             terminalOutput.textContent = outputContent;
             
-            if (recording.frames.length > 0) {
-                const progress = (currentFrame / recording.frames.length) * 100;
+            if (processedRecording.frames.length > 0) {
+                const progress = (currentFrame / processedRecording.frames.length) * 100;
                 progressFill.style.width = progress + '%';
                 
-                const currentTime = currentFrame > 0 ? (recording.frames[currentFrame - 1].timestamp / 1000).toFixed(1) : '0.0';
-                const totalTime = ((recording.endTime - recording.startTime) / 1000).toFixed(1);
+                const currentTime = currentFrame > 0 ? (processedRecording.frames[currentFrame - 1].timestamp / 1000).toFixed(1) : '0.0';
+                const totalTime = processedRecording.frames.length > 0 ? 
+                    (processedRecording.frames[processedRecording.frames.length - 1].timestamp / 1000).toFixed(1) : '0.0';
                 timeDisplay.textContent = currentTime + 's / ' + totalTime + 's';
             }
         }
         
         function playRecording() {
-            if (currentFrame >= recording.frames.length) {
+            if (currentFrame >= processedRecording.frames.length) {
                 isPlaying = false;
                 playBtn.disabled = false;
                 pauseBtn.disabled = true;
                 return;
             }
             
-            const frame = recording.frames[currentFrame];
+            const frame = processedRecording.frames[currentFrame];
             if (frame.type === 'output' || frame.type === 'input') {
                 outputContent += frame.content;
             }
@@ -258,8 +312,8 @@ export class RecordingPlayer implements vscode.Disposable {
             currentFrame++;
             updateDisplay();
             
-            if (isPlaying && currentFrame < recording.frames.length) {
-                const nextFrame = recording.frames[currentFrame];
+            if (isPlaying && currentFrame < processedRecording.frames.length) {
+                const nextFrame = processedRecording.frames[currentFrame];
                 const delay = Math.max(50, nextFrame.timestamp - frame.timestamp);
                 
                 setTimeout(() => {
@@ -267,7 +321,7 @@ export class RecordingPlayer implements vscode.Disposable {
                         playRecording();
                     }
                 }, delay);
-            } else if (currentFrame >= recording.frames.length) {
+            } else if (currentFrame >= processedRecording.frames.length) {
                 isPlaying = false;
                 playBtn.disabled = false;
                 pauseBtn.disabled = true;
@@ -296,6 +350,22 @@ export class RecordingPlayer implements vscode.Disposable {
             updateDisplay();
         });
         
+        removeDeadTimeToggle.addEventListener('change', () => {
+            const wasPlaying = isPlaying;
+            if (isPlaying) {
+                isPlaying = false;
+                playBtn.disabled = false;
+                pauseBtn.disabled = true;
+            }
+            
+            updateProcessedRecording();
+            
+            // Reset playback
+            currentFrame = 0;
+            outputContent = '';
+            updateDisplay();
+        });
+        
         copyBtn.addEventListener('click', () => {
             vscode.postMessage({
                 command: 'copy',
@@ -315,12 +385,12 @@ export class RecordingPlayer implements vscode.Disposable {
             const clickX = e.clientX - rect.left;
             const progress = clickX / rect.width;
             
-            currentFrame = Math.floor(progress * recording.frames.length);
+            currentFrame = Math.floor(progress * processedRecording.frames.length);
             
             // Rebuild output up to current frame
             outputContent = '';
             for (let i = 0; i < currentFrame; i++) {
-                const frame = recording.frames[i];
+                const frame = processedRecording.frames[i];
                 if (frame.type === 'output' || frame.type === 'input') {
                     outputContent += frame.content;
                 }
@@ -329,7 +399,8 @@ export class RecordingPlayer implements vscode.Disposable {
             updateDisplay();
         });
         
-        // Initialize display
+        // Initialize
+        updateProcessedRecording();
         updateDisplay();
     </script>
 </body>

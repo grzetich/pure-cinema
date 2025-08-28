@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import { spawn, ChildProcess } from 'child_process';
+import { AIAwareRecorder, AIInteractionFrame, AIAwareRecording } from './aiAwareRecorder';
 
 export interface RecordingFrame {
     timestamp: number;
@@ -35,16 +36,25 @@ export class TerminalRecorder implements vscode.Disposable {
     private shellProcess: ChildProcess | null = null;
     private writeEmitter: vscode.EventEmitter<string> | null = null;
     private currentCommandBuffer: string = '';
+    private aiAwareRecorder: AIAwareRecorder;
+    private aiAwareMode: boolean = false;
 
     constructor() {
         this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
         this.disposables.push(this.statusBarItem);
+        this.aiAwareRecorder = new AIAwareRecorder();
     }
 
-    public async startRecording(): Promise<void> {
+    public async startRecording(aiAware: boolean = false): Promise<void> {
         if (this.isRecording) {
             vscode.window.showWarningMessage('Recording is already in progress');
             return;
+        }
+
+        this.aiAwareMode = aiAware;
+        
+        if (this.aiAwareMode) {
+            vscode.window.showInformationMessage('🤖 Starting AI-Aware Recording - Will detect AI tools and interactions');
         }
 
         // Check workspace trust first
@@ -85,6 +95,11 @@ export class TerminalRecorder implements vscode.Disposable {
                             process.env.USERPROFILE || 
                             process.env.HOME || 
                             process.cwd();
+        
+        // Initialize AI-aware recording if enabled
+        if (this.aiAwareMode) {
+            this.aiAwareRecorder.startAIAwareRecording();
+        }
         
         this.currentRecording = {
             version: '1.0',
@@ -422,6 +437,7 @@ export class TerminalRecorder implements vscode.Disposable {
         const processedFrames: RecordingFrame[] = [];
         const inputBuffer: string[] = [];
         
+        // Remove backspace artifacts only - dead time removal is handled in playback
         for (const frame of recording.frames) {
             if (frame.type === 'input') {
                 if (frame.content === '[BACKSPACE]') {
@@ -453,6 +469,7 @@ export class TerminalRecorder implements vscode.Disposable {
         };
     }
 
+
     private async saveRecording(): Promise<void> {
         if (!this.currentRecording) {return;}
 
@@ -477,6 +494,33 @@ export class TerminalRecorder implements vscode.Disposable {
         }
 
         this.currentRecording = null;
+    }
+
+    private recordFrame(frame: RecordingFrame): void {
+        if (!this.currentRecording || !this.isRecording) return;
+
+        if (this.aiAwareMode) {
+            // Enhance frame with AI detection
+            const enhancedFrame = this.aiAwareRecorder.enhanceRegularRecording(frame);
+            
+            // If it's detected as AI, also check for specific Claude Code patterns
+            if (enhancedFrame.source === 'ai' || frame.content.includes('Claude Code') || frame.content.includes('🤖')) {
+                enhancedFrame.source = 'claude_code';
+                enhancedFrame.metadata = {
+                    ...enhancedFrame.metadata,
+                    toolName: 'claude_code',
+                    confidence: 0.95
+                };
+            }
+            
+            this.currentRecording.frames.push(enhancedFrame as RecordingFrame);
+        } else {
+            this.currentRecording.frames.push(frame);
+        }
+    }
+
+    public async startAIAwareRecording(): Promise<void> {
+        await this.startRecording(true);
     }
 
     dispose(): void {

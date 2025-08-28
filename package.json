@@ -47,6 +47,11 @@
         "category": "Pure Cinema"
       },
       {
+        "command": "pure-cinema.startAIRecording",
+        "title": "Start AI-Aware Recording",
+        "category": "Pure Cinema"
+      },
+      {
         "command": "pure-cinema.stopRecording",
         "title": "Stop Recording",
         "category": "Pure Cinema"

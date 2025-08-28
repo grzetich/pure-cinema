@@ -21,6 +21,10 @@ export function activate(context: vscode.ExtensionContext) {
         recorder?.startRecording();
     });
 
+    const startAIRecordingCommand = vscode.commands.registerCommand('pure-cinema.startAIRecording', () => {
+        recorder?.startAIAwareRecording();
+    });
+
     const stopRecordingCommand = vscode.commands.registerCommand('pure-cinema.stopRecording', () => {
         recorder?.stopRecording();
     });
@@ -70,7 +74,7 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
-    context.subscriptions.push(startRecordingCommand, stopRecordingCommand, playRecordingCommand, editRecordingCommand, exportRecordingCommand);
+    context.subscriptions.push(startRecordingCommand, startAIRecordingCommand, stopRecordingCommand, playRecordingCommand, editRecordingCommand, exportRecordingCommand);
 }
 
 export function deactivate() {

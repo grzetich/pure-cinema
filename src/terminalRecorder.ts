@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import { spawn, ChildProcess } from 'child_process';
-import { AIAwareRecorder, AIInteractionFrame, AIAwareRecording } from './aiAwareRecorder';
 
 export interface RecordingFrame {
     timestamp: number;
@@ -35,26 +34,16 @@ export class TerminalRecorder implements vscode.Disposable {
     private statusBarItem: vscode.StatusBarItem;
     private shellProcess: ChildProcess | null = null;
     private writeEmitter: vscode.EventEmitter<string> | null = null;
-    private currentCommandBuffer: string = '';
-    private aiAwareRecorder: AIAwareRecorder;
-    private aiAwareMode: boolean = false;
 
     constructor() {
         this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
         this.disposables.push(this.statusBarItem);
-        this.aiAwareRecorder = new AIAwareRecorder();
     }
 
-    public async startRecording(aiAware: boolean = false): Promise<void> {
+    public async startRecording(): Promise<void> {
         if (this.isRecording) {
             vscode.window.showWarningMessage('Recording is already in progress');
             return;
-        }
-
-        this.aiAwareMode = aiAware;
-        
-        if (this.aiAwareMode) {
-            vscode.window.showInformationMessage('🤖 Starting AI-Aware Recording - Will detect AI tools and interactions');
         }
 
         // Check workspace trust first
@@ -96,10 +85,6 @@ export class TerminalRecorder implements vscode.Disposable {
                             process.env.HOME || 
                             process.cwd();
         
-        // Initialize AI-aware recording if enabled
-        if (this.aiAwareMode) {
-            this.aiAwareRecorder.startAIAwareRecording();
-        }
         
         this.currentRecording = {
             version: '1.0',
@@ -163,61 +148,30 @@ export class TerminalRecorder implements vscode.Disposable {
                 
                 if (this.shellProcess && this.shellProcess.stdin) {
                     try {
-                        const charCode = data.charCodeAt(0);
-                        console.log('Pure Cinema: Processing char code:', charCode, 'character:', JSON.stringify(data));
-                        
-                        // Handle input by building a command buffer and recording keystrokes
-                        if (charCode >= 32 && charCode <= 126) {
-                            // Regular printable character - add to buffer
-                            this.currentCommandBuffer += data;
+                        // On Windows cmd.exe, we need to echo input ourselves since piped input isn't echoed
+                        if (process.platform === 'win32') {
+                            console.log('Pure Cinema: Windows detected - manually echoing:', JSON.stringify(data));
+                            // Echo the character to the terminal display
                             writeEmitter.fire(data);
-                            console.log('Pure Cinema: Added to buffer:', JSON.stringify(data), 'Buffer:', JSON.stringify(this.currentCommandBuffer));
-                            
-                            // Record individual keystroke for typing animation
-                            if (this.currentRecording && this.isRecording) {
-                                this.currentRecording.frames.push({
-                                    timestamp: Date.now() - this.currentRecording.startTime,
-                                    content: data,
-                                    type: 'input'
-                                });
-                            }
-                        } else if (charCode === 8 || charCode === 127) {
-                            // Backspace - remove from buffer
-                            if (this.currentCommandBuffer.length > 0) {
-                                this.currentCommandBuffer = this.currentCommandBuffer.slice(0, -1);
-                                writeEmitter.fire('\b \b');
-                                console.log('Pure Cinema: Backspace - Buffer now:', JSON.stringify(this.currentCommandBuffer));
-                                
-                                // Record backspace for typing animation (will be processed during save)
-                                if (this.currentRecording && this.isRecording) {
-                                    this.currentRecording.frames.push({
-                                        timestamp: Date.now() - this.currentRecording.startTime,
-                                        content: '[BACKSPACE]',
-                                        type: 'input'
-                                    });
-                                }
-                            }
-                        } else if (charCode === 13) {
-                            // Enter key - send complete command to shell
-                            writeEmitter.fire('\r\n');
-                            console.log('Pure Cinema: Enter pressed - sending command:', JSON.stringify(this.currentCommandBuffer));
-                            
-                            // Send the clean command to shell
-                            this.shellProcess.stdin.write(this.currentCommandBuffer + '\n');
-                            
-                            // Record Enter key for typing animation
-                            if (this.currentRecording && this.isRecording) {
-                                this.currentRecording.frames.push({
-                                    timestamp: Date.now() - this.currentRecording.startTime,
-                                    content: '\r\n',
-                                    type: 'input'
-                                });
-                            }
-                            
-                            // Clear buffer for next command
-                            this.currentCommandBuffer = '';
+                        }
+                        
+                        // Send input to shell process
+                        console.log('Pure Cinema: Shell process alive?', !this.shellProcess.killed, 'PID:', this.shellProcess.pid);
+                        // On Windows, convert \r to \r\n for proper command execution
+                        if (process.platform === 'win32' && data === '\r') {
+                            console.log('Pure Cinema: Converting \\r to \\r\\n for Windows');
+                            this.shellProcess.stdin.write('\r\n');
                         } else {
-                            console.log('Pure Cinema: Unhandled character code:', charCode);
+                            this.shellProcess.stdin.write(data);
+                        }
+                        
+                        // Record input for playback
+                        if (this.currentRecording && this.isRecording) {
+                            this.currentRecording.frames.push({
+                                timestamp: Date.now() - this.currentRecording.startTime,
+                                content: data,
+                                type: 'input'
+                            });
                         }
                         
                     } catch (error) {
@@ -257,8 +211,8 @@ export class TerminalRecorder implements vscode.Disposable {
             // Determine shell args for interactive mode
             const shellArgs: string[] = [];
             if (process.platform === 'win32') {
-                // Windows cmd.exe - use /Q to disable command echo, /K to keep shell open
-                shellArgs.push('/Q', '/K');
+                // Windows cmd.exe - use /K to keep shell open (removed /Q to enable echo)
+                shellArgs.push('/K');
             } else {
                 // Unix shells (bash, zsh, etc.)
                 shellArgs.push('-i'); // Interactive mode
@@ -401,7 +355,6 @@ export class TerminalRecorder implements vscode.Disposable {
             this.shellProcess = null;
         }
         this.writeEmitter = null;
-        this.currentCommandBuffer = '';
     }
 
 
@@ -496,32 +449,6 @@ export class TerminalRecorder implements vscode.Disposable {
         this.currentRecording = null;
     }
 
-    private recordFrame(frame: RecordingFrame): void {
-        if (!this.currentRecording || !this.isRecording) return;
-
-        if (this.aiAwareMode) {
-            // Enhance frame with AI detection
-            const enhancedFrame = this.aiAwareRecorder.enhanceRegularRecording(frame);
-            
-            // If it's detected as AI, also check for specific Claude Code patterns
-            if (enhancedFrame.source === 'ai' || frame.content.includes('Claude Code') || frame.content.includes('🤖')) {
-                enhancedFrame.source = 'claude_code';
-                enhancedFrame.metadata = {
-                    ...enhancedFrame.metadata,
-                    toolName: 'claude_code',
-                    confidence: 0.95
-                };
-            }
-            
-            this.currentRecording.frames.push(enhancedFrame as RecordingFrame);
-        } else {
-            this.currentRecording.frames.push(frame);
-        }
-    }
-
-    public async startAIAwareRecording(): Promise<void> {
-        await this.startRecording(true);
-    }
 
     dispose(): void {
         if (this.isRecording) {

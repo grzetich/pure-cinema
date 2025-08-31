@@ -4,536 +4,377 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pure Cinema - Terminal Recording for VS Code</title>
-    <meta name="description" content="Record interactive terminal sessions directly in VS Code. Create shareable terminal recordings with timing, colors, and copy-able output.">
-    <meta name="keywords" content="terminal recording, VS Code extension, asciinema, developer tools, terminal sessions">
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://edgrz.github.io/pure-cinema/">
-    <meta property="og:title" content="Pure Cinema - Terminal Recording for VS Code">
-    <meta property="og:description" content="Record interactive terminal sessions directly in VS Code">
-    <meta property="og:image" content="https://edgrz.github.io/pure-cinema/assets/preview.png">
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://edgrz.github.io/pure-cinema/">
-    <meta property="twitter:title" content="Pure Cinema - Terminal Recording for VS Code">
-    <meta property="twitter:description" content="Record interactive terminal sessions directly in VS Code">
-    <meta property="twitter:image" content="https://edgrz.github.io/pure-cinema/assets/preview.png">
-
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            color: #f8f9fa;
-            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #0f0f23 100%);
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
         }
-
+        
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 20px;
         }
-
-        /* Header */
-        header {
-            padding: 2rem 0;
+        
+        .header {
             text-align: center;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .logo {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .tagline {
-            font-size: 1.25rem;
-            color: #cbd5e1;
-            margin-bottom: 2rem;
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 4rem 0;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, #ffffff, #cbd5e1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            color: #94a3b8;
-            margin-bottom: 3rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* CTA Buttons */
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-bottom: 4rem;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
             color: white;
+            margin-bottom: 40px;
         }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+        
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: #f8f9fa;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+        
+        .header .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
         }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
+        
+        .header .description {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
         }
-
-        /* Features Section */
-        .features {
-            padding: 4rem 0;
-            background: rgba(255, 255, 255, 0.02);
+        
+        .main-content {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
-
-        .features h2 {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            color: #f8f9fa;
-        }
-
+        
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
         }
-
-        .feature-card {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 2rem;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
+        
+        .feature {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
         }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(99, 102, 241, 0.3);
+        
+        .feature h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
         }
-
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: #f8f9fa;
-        }
-
-        .feature-card p {
-            color: #cbd5e1;
+        
+        .feature p {
+            color: #666;
             line-height: 1.6;
         }
-
-        /* Demo Section */
-        .demo {
-            padding: 4rem 0;
-            text-align: center;
+        
+        .install-section, .usage-section, .roadmap-section {
+            margin: 40px 0;
         }
-
-        .demo h2 {
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            color: #f8f9fa;
-        }
-
-        .demo-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: #0f0f23;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid #44475a;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .demo-header {
-            background: linear-gradient(90deg, #6366f1, #8b5cf6);
-            padding: 1rem;
+        
+        .section-title {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
         }
-
-        .demo-controls {
-            display: flex;
-            gap: 0.5rem;
+        
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 30px;
+            background: #667eea;
+            margin-right: 15px;
+            border-radius: 2px;
         }
-
-        .demo-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
+        
+        .install-steps, .usage-steps {
+            background: #f1f3f4;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
         }
-
-        .demo-title {
-            color: white;
-            font-weight: 600;
-            margin-left: 1rem;
+        
+        .install-steps ol, .usage-steps ol {
+            margin-left: 20px;
         }
-
-        .terminal {
-            background: #0f0f23;
-            color: #f8f8f2;
-            padding: 2rem;
-            font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
-            text-align: left;
-            line-height: 1.5;
-            font-size: 14px;
+        
+        .install-steps li, .usage-steps li {
+            margin: 10px 0;
+            font-size: 1.1rem;
         }
-
-        .prompt {
-            color: #50fa7b;
-        }
-
-        .command {
-            color: #8be9fd;
-        }
-
-        .output {
-            color: #f8f8f2;
-            margin-bottom: 1rem;
-        }
-
-        /* How It Works */
-        .how-it-works {
-            padding: 4rem 0;
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .how-it-works h2 {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            color: #f8f9fa;
-        }
-
-        .steps {
+        
+        .commands {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+            gap: 15px;
+            margin: 20px 0;
         }
-
-        .step {
+        
+        .command {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .command strong {
+            color: #1976d2;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .roadmap {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .roadmap-item {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .roadmap-item h4 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+        
+        .roadmap-item ul {
+            list-style: none;
+        }
+        
+        .roadmap-item li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .roadmap-item li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .footer {
             text-align: center;
-            padding: 2rem 1rem;
-        }
-
-        .step-number {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 0 auto 1rem;
+            margin-top: 50px;
+            padding: 30px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
             color: white;
         }
-
-        .step h3 {
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-            color: #f8f9fa;
+        
+        .footer p {
+            font-size: 1.1rem;
+            margin: 10px 0;
         }
-
-        .step p {
-            color: #cbd5e1;
+        
+        .footer .highlight {
+            font-weight: bold;
+            color: #fff;
         }
-
-        /* Footer */
-        footer {
-            padding: 3rem 0;
-            text-align: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(0, 0, 0, 0.2);
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .footer-links a {
-            color: #cbd5e1;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: #6366f1;
-        }
-
-        .copyright {
-            color: #64748b;
+        
+        .demo-terminal {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            margin: 20px 0;
             font-size: 0.9rem;
+            line-height: 1.4;
+            overflow-x: auto;
         }
-
-        /* Responsive */
+        
+        .demo-terminal .prompt {
+            color: #569cd6;
+        }
+        
+        .demo-terminal .command {
+            color: #ce9178;
+        }
+        
+        .demo-terminal .output {
+            color: #9cdcfe;
+        }
+        
         @media (max-width: 768px) {
-            .hero h1 {
+            .header h1 {
                 font-size: 2.5rem;
             }
             
-            .logo {
-                font-size: 2rem;
+            .container {
+                padding: 10px;
             }
             
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
+            .main-content {
+                padding: 25px;
             }
             
-            .btn {
-                width: 100%;
-                max-width: 300px;
+            .features-grid {
+                grid-template-columns: 1fr;
             }
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .hero, .features, .demo, .how-it-works {
-            animation: fadeInUp 0.8s ease-out;
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="logo">🎬 Pure Cinema</div>
-            <p class="tagline">Terminal Recording for VS Code</p>
+    <div class="container">
+        <div class="header">
+            <h1>🎬 Pure Cinema</h1>
+            <div class="subtitle">Terminal Recording for VS Code</div>
+            <div class="description">
+                Record, play, and share terminal sessions directly in Visual Studio Code. 
+                Think asciinema, but fully integrated into your editor with complete privacy and control.
+            </div>
         </div>
-    </header>
-
-    <section class="hero">
-        <div class="container">
-            <h1>Record Terminal Sessions Like a Pro</h1>
-            <p>Create interactive terminal recordings directly in VS Code. Perfect for tutorials, debugging demos, and sharing workflows with your team.</p>
+        
+        <div class="main-content">
+            <div class="section-title">⭐ Key Features</div>
             
-            <div class="cta-buttons">
-                <a href="https://marketplace.visualstudio.com/items?itemName=pure-cinema" class="btn btn-primary">
-                    📦 Install Extension
-                </a>
-                <a href="https://github.com/edgrz/pure-cinema" class="btn btn-secondary">
-                    ⭐ View on GitHub
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <section class="features">
-        <div class="container">
-            <h2>Why Pure Cinema?</h2>
             <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🎯</div>
-                    <h3>Real Shell Recording</h3>
-                    <p>Record actual terminal sessions with real command execution. No simulation - capture npm, git, docker, and any command with authentic timing.</p>
+                <div class="feature">
+                    <h3>🎬 Native Recording</h3>
+                    <p>Record terminal sessions with accurate timing, input/output differentiation, and cross-platform compatibility. No external tools required.</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🌐</div>
-                    <h3>Cross-Platform</h3>
-                    <p>Works seamlessly with cmd.exe on Windows, bash/zsh on macOS/Linux. One extension, all platforms covered.</p>
+                
+                <div class="feature">
+                    <h3>🎮 Interactive Playback</h3>
+                    <p>Play recordings with full controls - seek, pause, copy text. Perfect for reviewing sessions or creating documentation.</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔒</div>
-                    <h3>Privacy First</h3>
-                    <p>All recordings are stored locally on your machine. No data is transmitted externally. You control your content completely.</p>
+                
+                <div class="feature">
+                    <h3>✂️ Smart Editing</h3>
+                    <p>Trim recordings, adjust dimensions, and fine-tune your sessions. Remove dead time and focus on what matters.</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📋</div>
-                    <h3>Copy-able Output</h3>
-                    <p>Viewers can copy text directly from recordings. Perfect for sharing commands, error messages, and results.</p>
+                
+                <div class="feature">
+                    <h3>🌐 Web Export</h3>
+                    <p>Export recordings to HTML for easy sharing. Self-contained files work anywhere without dependencies.</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🚀</div>
-                    <h3>Easy Sharing</h3>
-                    <p>Export to interactive HTML, share on GitHub, LinkedIn, or any platform. Built-in social sharing tools included.</p>
+                
+                <div class="feature">
+                    <h3>🔒 100% Private</h3>
+                    <p>All data stays on your machine. No cloud services, no telemetry, no network requests. Your sessions remain completely private.</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🎨</div>
-                    <h3>Beautiful Playback</h3>
-                    <p>Rich terminal colors, authentic formatting, and smooth playback controls. Recordings look professional.</p>
+                
+                <div class="feature">
+                    <h3>📋 Text Copyable</h3>
+                    <p>Viewers can copy text directly from recordings - maintaining the utility of terminal output while preserving the visual experience.</p>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <section class="demo">
-        <div class="container">
-            <h2>See It In Action</h2>
-            <div class="demo-container">
-                <div class="demo-header">
-                    <div class="demo-controls">
-                        <div class="demo-dot" style="background: #ff5f56;"></div>
-                        <div class="demo-dot" style="background: #ffbd2e;"></div>
-                        <div class="demo-dot" style="background: #27c93f;"></div>
+            
+            <div class="install-section">
+                <div class="section-title">🚀 Installation & Usage</div>
+                
+                <h3>Install</h3>
+                <div class="install-steps">
+                    <ol>
+                        <li>Open VS Code</li>
+                        <li>Go to Extensions (Ctrl+Shift+X)</li>
+                        <li>Search for "Pure Cinema"</li>
+                        <li>Click Install</li>
+                    </ol>
+                </div>
+                
+                <h3>Quick Start</h3>
+                <div class="demo-terminal">
+<span class="prompt">1.</span> <span class="command">Ctrl+Shift+P → "Pure Cinema: Start Recording"</span>
+<span class="prompt">2.</span> <span class="command">Use your terminal normally</span>
+<span class="prompt">3.</span> <span class="command">Ctrl+Shift+P → "Pure Cinema: Stop Recording"</span>
+<span class="prompt">4.</span> <span class="output">Save your .pcr file</span>
+                </div>
+            </div>
+            
+            <div class="usage-section">
+                <h3>Commands</h3>
+                <div class="commands">
+                    <div class="command">
+                        <strong>Start Recording</strong>
+                        Begin capturing terminal session
                     </div>
-                    <div class="demo-title">Pure Cinema Recording</div>
+                    <div class="command">
+                        <strong>Stop Recording</strong>
+                        End current recording and save
+                    </div>
+                    <div class="command">
+                        <strong>Play Recording</strong>
+                        Watch saved recordings with controls
+                    </div>
+                    <div class="command">
+                        <strong>Edit Recording</strong>
+                        Trim and adjust recordings
+                    </div>
+                    <div class="command">
+                        <strong>Export Recording</strong>
+                        Share as HTML or other formats
+                    </div>
                 </div>
-                <div class="terminal">
-                    <div class="output"><span class="prompt">user@demo:~$</span> <span class="command">npm --version</span></div>
-                    <div class="output">10.9.3</div>
-                    <div class="output"><span class="prompt">user@demo:~$</span> <span class="command">git status</span></div>
-                    <div class="output">On branch main<br>Your branch is up to date with 'origin/main'.</div>
-                    <div class="output"><span class="prompt">user@demo:~$</span> <span class="command">npm test</span></div>
-                    <div class="output">✅ All tests passed!</div>
-                    <div class="output"><span class="prompt">user@demo:~$</span> <span class="command">echo "Ready to deploy! 🚀"</span></div>
-                    <div class="output">Ready to deploy! 🚀</div>
+            </div>
+            
+            <div class="roadmap-section">
+                <div class="section-title">🗺️ Roadmap</div>
+                
+                <div class="roadmap">
+                    <div class="roadmap-item">
+                        <h4>Version 1.1 (Next Release)</h4>
+                        <ul>
+                            <li>GIF Export - Generate animated GIFs from recordings</li>
+                            <li>Themes - Multiple color schemes for playback</li>
+                            <li>Keyboard Shortcuts - Quick access to common actions</li>
+                            <li>Batch Processing - Edit multiple recordings at once</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="roadmap-item">
+                        <h4>Version 1.2 (Q1 2026)</h4>
+                        <ul>
+                            <li>MP4 Export - High-quality video output</li>
+                            <li>Live Streaming - Real-time sharing capabilities</li>
+                            <li>Annotations - Add text overlays and highlights</li>
+                            <li>Templates - Predefined recording configurations</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="roadmap-item">
+                        <h4>Version 1.3 (Q2 2026)</h4>
+                        <ul>
+                            <li>Collaboration - Share recordings with team members</li>
+                            <li>Cloud Sync - Optional encrypted cloud storage</li>
+                            <li>API Integration - Programmatic recording control</li>
+                            <li>Advanced Editing - Multi-track and composite recordings</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
-
-    <section class="how-it-works">
-        <div class="container">
-            <h2>How It Works</h2>
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <h3>Start Recording</h3>
-                    <p>Open command palette in VS Code and run "Pure Cinema: Start Recording". A new terminal opens ready to capture your session.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <h3>Run Commands</h3>
-                    <p>Execute your commands normally. Pure Cinema captures everything - input, output, timing, and colors in real-time.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <h3>Stop & Save</h3>
-                    <p>When done, run "Pure Cinema: Stop Recording". Your session is saved as a .pcr file with all interaction data.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <h3>Share Anywhere</h3>
-                    <p>Play back recordings in VS Code, export to HTML, or share directly to GitHub, LinkedIn, and other platforms.</p>
-                </div>
-            </div>
+        
+        <div class="footer">
+            <p><span class="highlight">Ready to create better terminal demos?</span></p>
+            <p>Install Pure Cinema today and transform how you share terminal workflows!</p>
+            <br>
+            <p><em>Open source • MIT Licensed • No tracking • Your data stays local</em></p>
         </div>
-    </section>
-
-    <footer>
-        <div class="container">
-            <div class="footer-links">
-                <a href="https://marketplace.visualstudio.com/items?itemName=pure-cinema">VS Code Marketplace</a>
-                <a href="https://github.com/edgrz/pure-cinema">GitHub Repository</a>
-                <a href="https://github.com/edgrz/pure-cinema/issues">Report Issues</a>
-                <a href="https://github.com/edgrz/pure-cinema/blob/main/docs/prd.md">Documentation</a>
-            </div>
-            <p class="copyright">© 2025 Pure Cinema. Open source terminal recording for developers.</p>
-        </div>
-    </footer>
-
-    <script>
-        // Add smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-
-        // Add scroll animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // Observe all feature cards and steps
-        document.querySelectorAll('.feature-card, .step').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(el);
-        });
-    </script>
+    </div>
 </body>
 </html>

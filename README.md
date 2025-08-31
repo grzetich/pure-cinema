@@ -1,6 +1,8 @@
-# Pure Cinema
+# Pure Cinema 🎬
 
-A Visual Studio Code extension that provides terminal recording capabilities similar to asciinema, but integrated directly into VS Code. **100% local and private** - no data leaves your machine.
+**Record terminal sessions directly in VS Code - completely private and local**
+
+Pure Cinema brings asciinema-style terminal recording directly into Visual Studio Code. Perfect for creating demos, documentation, and sharing terminal workflows. **100% private** - no data ever leaves your machine.
 
 ## Features
 
@@ -18,11 +20,13 @@ A Visual Studio Code extension that provides terminal recording capabilities sim
 
 ### Recording a Terminal Session
 
-1. Open a terminal in VS Code
-2. Right-click in the terminal and select "Pure Cinema: Start Recording"
-3. Perform your terminal actions
-4. Right-click and select "Pure Cinema: Stop Recording" when finished
+1. Open Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`)
+2. Run **"Pure Cinema: Start Recording"**
+3. A new terminal will open - perform your actions
+4. Run **"Pure Cinema: Stop Recording"** when finished
 5. Choose where to save your recording (.pcr file)
+
+![Recording Demo](https://raw.githubusercontent.com/grzetich/pure-cinema/main/docs/demo-recording.gif)
 
 ### Playing a Recording
 

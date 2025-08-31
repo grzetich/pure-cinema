@@ -2,19 +2,19 @@
   "name": "pure-cinema",
   "displayName": "Pure Cinema",
   "description": "Record terminal sessions locally within Visual Studio Code. No data transmission - completely private.",
-  "version": "0.1.0",
-  "publisher": "your-publisher-name",
+  "version": "1.0.0",
+  "publisher": "pure-cinema",
   "author": {
-    "name": "Your Name"
+    "name": "Pure Cinema"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/pure-cinema.git"
+    "url": "https://github.com/grzetich/pure-cinema.git"
   },
-  "homepage": "https://github.com/your-username/pure-cinema#readme",
+  "homepage": "https://github.com/grzetich/pure-cinema#readme",
   "bugs": {
-    "url": "https://github.com/your-username/pure-cinema/issues"
+    "url": "https://github.com/grzetich/pure-cinema/issues"
   },
   "keywords": [
     "terminal",
@@ -87,7 +87,9 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "test": "node ./out/test/runTest.js",
+    "test:platform": "node test-platform.js",
+    "test:docker": "docker build -f Dockerfile.test -t pure-cinema-test . && docker run --rm pure-cinema-test"
   },
   "devDependencies": {
     "@types/vscode": "^1.74.0",

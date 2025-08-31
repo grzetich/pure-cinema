@@ -1,0 +1,78 @@
+# Build outputs
+out/test/**
+out/**/*.map
+src/**
+
+# Dependencies
+node_modules/**
+
+# Source files
+src/**
+.vscode/**
+.vscode-test/**
+
+# Git
+.git/**
+.gitignore
+
+# Development files
+*.vsix
+.eslintrc.json
+tsconfig.json
+webpack.config.js
+CLAUDE.md
+
+# Test files
+src/test/**
+.vscode-test/**
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Lock files (but keep package-lock.json)
+yarn.lock
+pnpm-lock.yaml
+
+# IDE
+.idea/**
+*.swp
+*.swo
+
+# Coverage reports
+coverage/**
+.nyc_output/**
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Recording files (examples only)
+*.pcr
+recording-*.pcr
+test*.pcr
+npm-ver.pcr
+
+# Temporary files
+temp-share-*.html
+
+# Development docs
+docs/development-session-*.md
+
+# Claude settings
+.claude/**

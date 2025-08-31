@@ -36,7 +36,8 @@
     "onCommand:pure-cinema.stopRecording",
     "onCommand:pure-cinema.playRecording",
     "onCommand:pure-cinema.editRecording",
-    "onCommand:pure-cinema.exportRecording"
+    "onCommand:pure-cinema.exportRecording",
+    "onCommand:pure-cinema.shareToGist"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -64,6 +65,11 @@
       {
         "command": "pure-cinema.exportRecording",
         "title": "Export & Share Recording",
+        "category": "Pure Cinema"
+      },
+      {
+        "command": "pure-cinema.shareToGist",
+        "title": "Share Recording to GitHub Gist",
         "category": "Pure Cinema"
       }
     ],

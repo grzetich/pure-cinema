@@ -70,7 +70,22 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
-    context.subscriptions.push(startRecordingCommand, stopRecordingCommand, playRecordingCommand, editRecordingCommand, exportRecordingCommand);
+    const shareToGistCommand = vscode.commands.registerCommand('pure-cinema.shareToGist', async () => {
+        const uri = await vscode.window.showOpenDialog({
+            canSelectFiles: true,
+            canSelectFolders: false,
+            canSelectMany: false,
+            filters: {
+                'Pure Cinema Recordings': ['pcr']
+            }
+        });
+
+        if (uri && uri[0]) {
+            exporter?.shareRecordingToGist(uri[0]);
+        }
+    });
+
+    context.subscriptions.push(startRecordingCommand, stopRecordingCommand, playRecordingCommand, editRecordingCommand, exportRecordingCommand, shareToGistCommand);
 }
 
 export function deactivate() {

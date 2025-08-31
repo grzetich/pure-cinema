@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as https from 'https';
 import { Recording, RecordingFrame } from './terminalRecorder';
 
 export type ExportFormat = 'html' | 'gif' | 'mp4' | 'json';
@@ -25,6 +26,17 @@ export class RecordingExporter implements vscode.Disposable {
             await this.showExportOptions(recording, uri);
         } catch (error) {
             vscode.window.showErrorMessage(`Failed to load recording for export: ${error}`);
+        }
+    }
+
+    public async shareRecordingToGist(uri: vscode.Uri): Promise<void> {
+        try {
+            const content = await fs.promises.readFile(uri.fsPath, 'utf8');
+            const recording: Recording = JSON.parse(content);
+            
+            await this.shareToGitHubGist(recording, 'github', uri);
+        } catch (error) {
+            vscode.window.showErrorMessage(`Failed to load recording for GitHub Gist sharing: ${error}`);
         }
     }
 
@@ -722,14 +734,237 @@ Get Pure Cinema: https://marketplace.visualstudio.com/items?itemName=pure-cinema
     }
 
     private async shareToGitHubGist(recording: Recording, platform: string, originalUri: vscode.Uri): Promise<void> {
-        vscode.window.showInformationMessage(
-            'GitHub Gist sharing is not yet implemented. This would require GitHub authentication and API integration.',
-            'Learn More'
-        ).then(choice => {
-            if (choice === 'Learn More') {
-                vscode.env.openExternal(vscode.Uri.parse('https://docs.github.com/en/rest/gists/gists'));
+        try {
+            // Get GitHub token
+            const token = await this.getGitHubToken();
+            if (!token) {
+                return;
             }
+
+            // Prepare files for gist
+            const baseName = path.basename(originalUri.fsPath, '.pcr');
+            const gistFiles = await this.prepareGistFiles(recording, baseName);
+            
+            // Create gist
+            const gistUrl = await this.createGitHubGist(token, gistFiles, baseName);
+            
+            if (gistUrl) {
+                const choice = await vscode.window.showInformationMessage(
+                    `🎉 Recording shared to GitHub Gist!`,
+                    'Open Gist',
+                    'Copy URL',
+                    'Share on ' + platform
+                );
+
+                switch (choice) {
+                    case 'Open Gist':
+                        vscode.env.openExternal(vscode.Uri.parse(gistUrl));
+                        break;
+                    case 'Copy URL':
+                        await vscode.env.clipboard.writeText(gistUrl);
+                        vscode.window.showInformationMessage('Gist URL copied to clipboard!');
+                        break;
+                    case 'Share on ' + platform:
+                        await this.shareGistToSocial(gistUrl, platform, recording);
+                        break;
+                }
+            }
+
+        } catch (error) {
+            vscode.window.showErrorMessage(`Failed to share to GitHub Gist: ${error}`);
+        }
+    }
+
+    private async getGitHubToken(): Promise<string | null> {
+        // Try to get token from VS Code's built-in GitHub authentication
+        try {
+            const session = await vscode.authentication.getSession('github', ['gist'], { createIfNone: true });
+            return session.accessToken;
+        } catch (error) {
+            // Fallback: ask user to provide token manually
+            const choice = await vscode.window.showWarningMessage(
+                'GitHub authentication failed. You can provide a Personal Access Token to share gists.',
+                'Enter Token',
+                'Learn How',
+                'Cancel'
+            );
+
+            if (choice === 'Enter Token') {
+                const token = await vscode.window.showInputBox({
+                    prompt: 'Enter GitHub Personal Access Token (with gist scope)',
+                    password: true,
+                    placeHolder: 'ghp_...',
+                    validateInput: (value) => {
+                        if (!value || !value.startsWith('ghp_') && !value.startsWith('github_pat_')) {
+                            return 'Please enter a valid GitHub Personal Access Token';
+                        }
+                        return null;
+                    }
+                });
+                return token || null;
+            } else if (choice === 'Learn How') {
+                vscode.env.openExternal(vscode.Uri.parse('https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens'));
+                return null;
+            }
+            
+            return null;
+        }
+    }
+
+    private async prepareGistFiles(recording: Recording, baseName: string): Promise<{ [filename: string]: { content: string } }> {
+        const files: { [filename: string]: { content: string } } = {};
+
+        // 1. Original recording data
+        files[`${baseName}.pcr`] = {
+            content: JSON.stringify(recording, null, 2)
+        };
+
+        // 2. Interactive HTML player
+        const htmlOptions: ExportOptions = {
+            format: 'html',
+            includeControls: true,
+            theme: 'dark'
+        };
+        
+        files[`${baseName}-player.html`] = {
+            content: this.generateHtmlExport(recording, htmlOptions)
+        };
+
+        // 3. README with instructions
+        const duration = recording.endTime ? ((recording.endTime - recording.startTime) / 1000).toFixed(1) : '0.0';
+        const commandCount = recording.frames.filter(frame => frame.type === 'input').length;
+        
+        files['README.md'] = {
+            content: `# 🎬 Terminal Recording
+
+**Duration:** ${duration} seconds  
+**Commands:** ${commandCount}  
+**Terminal:** ${recording.terminalInfo.name || 'Unknown'}  
+**Created:** ${new Date(recording.startTime).toLocaleString()}
+
+## 📁 Files
+
+- \`${baseName}.pcr\` - Pure Cinema recording data (JSON format)
+- \`${baseName}-player.html\` - Interactive web player (open in browser)
+
+## 🎦 How to View
+
+### Option 1: Interactive Player
+1. Download \`${baseName}-player.html\`
+2. Open in any web browser
+3. Use playback controls to watch the session
+
+### Option 2: VS Code Extension
+1. Install [Pure Cinema](https://marketplace.visualstudio.com/items?itemName=pure-cinema) for VS Code
+2. Download \`${baseName}.pcr\`
+3. Use Command Palette: "Pure Cinema: Play Recording"
+
+## 🚀 About Pure Cinema
+
+Pure Cinema lets you record, edit, and share terminal sessions directly in VS Code. Perfect for:
+- 📚 Creating tutorials and demos
+- 🐛 Sharing debugging sessions
+- 📖 Documenting command-line workflows
+- 🎯 Code reviews and pair programming
+
+**Features:**
+- ✅ Records timing and input/output separately
+- ✅ Text remains copyable in recordings  
+- ✅ Cross-platform (Windows, macOS, Linux)
+- ✅ 100% local and private - no data transmission
+- ✅ Export to HTML, JSON, and more
+
+---
+*Recording created with [Pure Cinema](https://marketplace.visualstudio.com/items?itemName=pure-cinema) for VS Code*`
+        };
+
+        return files;
+    }
+
+    private async createGitHubGist(token: string, files: { [filename: string]: { content: string } }, baseName: string): Promise<string | null> {
+        const gistData = {
+            description: `🎬 Terminal Recording: ${baseName} (Created with Pure Cinema)`,
+            public: false, // Private by default for safety
+            files: files
+        };
+
+        return new Promise((resolve, reject) => {
+            const postData = JSON.stringify(gistData);
+            
+            const options = {
+                hostname: 'api.github.com',
+                port: 443,
+                path: '/gists',
+                method: 'POST',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json',
+                    'User-Agent': 'Pure-Cinema-VSCode-Extension',
+                    'Content-Length': Buffer.byteLength(postData)
+                }
+            };
+
+            const req = https.request(options, (res) => {
+                let responseData = '';
+
+                res.on('data', (chunk) => {
+                    responseData += chunk;
+                });
+
+                res.on('end', () => {
+                    try {
+                        if (res.statusCode === 201) {
+                            const result = JSON.parse(responseData);
+                            resolve(result.html_url);
+                        } else {
+                            const errorData = JSON.parse(responseData);
+                            reject(new Error(`GitHub API error: ${res.statusCode} - ${errorData.message || 'Unknown error'}`));
+                        }
+                    } catch (parseError) {
+                        reject(new Error(`Failed to parse GitHub API response: ${parseError}`));
+                    }
+                });
+            });
+
+            req.on('error', (error) => {
+                reject(new Error(`Network error creating gist: ${error.message}`));
+            });
+
+            req.write(postData);
+            req.end();
         });
+    }
+
+    private async shareGistToSocial(gistUrl: string, platform: string, recording: Recording): Promise<void> {
+        const duration = recording.endTime ? ((recording.endTime - recording.startTime) / 1000).toFixed(1) : '0.0';
+        const commandCount = recording.frames.filter(frame => frame.type === 'input').length;
+        
+        const shareTexts: { [key: string]: string } = {
+            'twitter': `🎬 Just shared a ${duration}s terminal recording with ${commandCount} commands!\n\n✨ Interactive playback with Pure Cinema for VS Code\n🔗 ${gistUrl}\n\n#coding #terminal #vscode #developer`,
+            'linkedin': `I just created an interactive terminal recording (${duration}s, ${commandCount} commands) using Pure Cinema for VS Code. Perfect for sharing debugging sessions and tutorials!\n\n${gistUrl}\n\n#coding #vscode #developertools`,
+            'github': `🎬 Terminal Recording\n\nDuration: ${duration}s | Commands: ${commandCount}\nCreated with Pure Cinema for VS Code\n\n${gistUrl}`,
+            'dev.to': `# 🎬 Terminal Recording\n\nJust shared a ${duration}s terminal session with ${commandCount} commands using Pure Cinema!\n\n[View Interactive Recording](${gistUrl})\n\nPure Cinema lets you record terminal sessions directly in VS Code with:\n- Interactive playback controls\n- Copy-able text output\n- Cross-platform support\n- 100% local and private\n\n#vscode #terminal #coding`
+        };
+
+        const shareText = shareTexts[platform] || shareTexts['github'];
+        await vscode.env.clipboard.writeText(shareText);
+
+        const platformUrls: { [key: string]: string } = {
+            'twitter': `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`,
+            'linkedin': 'https://www.linkedin.com/feed/',
+            'github': 'https://github.com',
+            'dev.to': `https://dev.to/new?prefill=---%0Atitle: ${encodeURIComponent('Terminal Recording')}%0Apublished: false%0A---%0A%0A${encodeURIComponent(shareText)}`
+        };
+
+        const choice = await vscode.window.showInformationMessage(
+            `Share text copied to clipboard! Ready to post on ${platform}.`,
+            `Open ${platform.charAt(0).toUpperCase() + platform.slice(1)}`
+        );
+
+        if (choice && platformUrls[platform]) {
+            vscode.env.openExternal(vscode.Uri.parse(platformUrls[platform]));
+        }
     }
 
     private async exportHtmlForManualSharing(recording: Recording, platform: string, originalUri: vscode.Uri): Promise<void> {

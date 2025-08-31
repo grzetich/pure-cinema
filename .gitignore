@@ -4,3 +4,10 @@ node_modules
 .vscode-test
 *.vsix
 .DS_Store
+
+# Recording files and temporary files
+*.pcr
+temp-share-*.html
+
+# Build artifacts
+*.tgz

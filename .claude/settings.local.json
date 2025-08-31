@@ -11,7 +11,8 @@
       "Bash(npx vsce:*)",
       "Bash(git add:*)",
       "Bash(git checkout:*)",
-      "Bash(npm run test:platform:*)"
+      "Bash(npm run test:platform:*)",
+      "WebFetch(domain:github.com)"
     ],
     "deny": [],
     "ask": []

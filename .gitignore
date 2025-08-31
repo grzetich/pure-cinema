@@ -11,3 +11,6 @@ temp-share-*.html
 
 # Build artifacts
 *.tgz
+
+# Internal documentation
+docs/prd.md

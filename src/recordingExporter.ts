@@ -685,7 +685,7 @@ export class RecordingExporter implements vscode.Disposable {
             placeHolder: `Share your terminal recording to ${platform}`
         });
 
-        if (!choice) return;
+        if (!choice) {return;}
 
         switch (choice.label) {
             case '🎬 Create Interactive Gist':

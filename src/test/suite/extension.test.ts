@@ -7,7 +7,7 @@ suite('Extension Integration Test Suite', () => {
 
 	test('should activate extension', async () => {
 		// Get the extension
-		const extension = vscode.extensions.getExtension('undefined_publisher.pure-cinema');
+		const extension = vscode.extensions.getExtension('pure-cinema.pure-cinema');
 		
 		if (extension) {
 			// Activate the extension
@@ -26,7 +26,10 @@ suite('Extension Integration Test Suite', () => {
 		const expectedCommands = [
 			'pure-cinema.startRecording',
 			'pure-cinema.stopRecording', 
-			'pure-cinema.playRecording'
+			'pure-cinema.playRecording',
+			'pure-cinema.editRecording',
+			'pure-cinema.exportRecording',
+			'pure-cinema.shareToGist'
 		];
 
 		expectedCommands.forEach(command => {

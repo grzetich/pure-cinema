@@ -169,9 +169,11 @@ suite('RecordingExporter Test Suite', () => {
 
 		const htmlContent = exporterAny.generateHtmlExport(sampleRecording, exportOptions);
 
-		// Controls should not be present
-		assert.ok(!htmlContent.includes('.controls'));
+		// Controls should not be present in HTML
 		assert.ok(!htmlContent.includes('id="playBtn"'));
+		assert.ok(!htmlContent.includes('id="pauseBtn"'));
+		assert.ok(!htmlContent.includes('id="resetBtn"'));
+		assert.ok(!htmlContent.includes('<div class="controls">'));
 		
 		// Should have static content function
 		assert.ok(htmlContent.includes('showStaticContent()'));

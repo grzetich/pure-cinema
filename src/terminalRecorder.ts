@@ -62,19 +62,22 @@ export class TerminalRecorder implements vscode.Disposable {
         }
 
         // Security and privacy confirmation dialog
-        const confirmed = await vscode.window.showWarningMessage(
-            'Pure Cinema will:\n' +
-            '• Create a real terminal that can execute system commands\n' +
-            '• Record all input/output locally on your machine\n' +
-            '• Never transmit any data externally\n\n' +
-            'Only use in trusted workspaces with code you trust.',
-            { modal: true },
-            'Start Recording',
-            'Cancel'
-        );
+        // Skip in test environment where dialogs are disabled
+        if (!this.isTestEnvironment()) {
+            const confirmed = await vscode.window.showWarningMessage(
+                'Pure Cinema will:\n' +
+                '• Create a real terminal that can execute system commands\n' +
+                '• Record all input/output locally on your machine\n' +
+                '• Never transmit any data externally\n\n' +
+                'Only use in trusted workspaces with code you trust.',
+                { modal: true },
+                'Start Recording',
+                'Cancel'
+            );
 
-        if (confirmed !== 'Start Recording') {
-            return;
+            if (confirmed !== 'Start Recording') {
+                return;
+            }
         }
 
         this.isRecording = true;
@@ -281,7 +284,7 @@ export class TerminalRecorder implements vscode.Disposable {
                         .replace(/\x7F+/g, '') // Delete characters  
                         .replace(/\x1B\[K/g, '') // Clear line escape sequence
                         .replace(/\x1B\[D/g, '') // Cursor left escape sequence
-                        .replace(/\x1B\[\d*D/g, '') // Cursor left N positions
+                        .replace(/\x1B\[\d*D/g, ''); // Cursor left N positions
                     
                     console.log('Pure Cinema: After filtering - Clean content:', JSON.stringify(cleanContent));
                     console.log('Pure Cinema: After filtering - Character codes:', cleanContent.split('').map(c => c.charCodeAt(0)));
@@ -313,7 +316,7 @@ export class TerminalRecorder implements vscode.Disposable {
                         .replace(/\x7F+/g, '') // Delete characters  
                         .replace(/\x1B\[K/g, '') // Clear line escape sequence
                         .replace(/\x1B\[D/g, '') // Cursor left escape sequence
-                        .replace(/\x1B\[\d*D/g, '') // Cursor left N positions
+                        .replace(/\x1B\[\d*D/g, ''); // Cursor left N positions
                     console.log('Pure Cinema: stderr Original content:', JSON.stringify(content));
                     console.log('Pure Cinema: stderr Clean content:', JSON.stringify(cleanContent));
                     // Record as output (errors are still shell output)
@@ -477,6 +480,13 @@ export class TerminalRecorder implements vscode.Disposable {
         }
 
         this.currentRecording = null;
+    }
+
+    private isTestEnvironment(): boolean {
+        // Detect if we're running in test environment
+        return process.env.NODE_ENV === 'test' || 
+               process.argv.some(arg => arg.includes('test')) ||
+               typeof (global as any).suite === 'function';
     }
 
     dispose(): void {

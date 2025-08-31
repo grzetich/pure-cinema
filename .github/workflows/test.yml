@@ -1,0 +1,63 @@
+name: Test Extension
+
+on:
+  push:
+    branches: [ main, feature/* ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        vscode-version: [stable]
+    
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Compile extension
+      run: npm run compile
+    
+    - name: Run tests
+      uses: GabrielBB/xvfb-action@v1
+      with:
+        run: npm test
+      env:
+        CODE_VERSION: ${{ matrix.vscode-version }}
+    
+    - name: Package extension
+      run: npx vsce package
+    
+    - name: Test basic functionality
+      shell: bash
+      run: |
+        echo "Testing shell detection..."
+        node -e "
+          const os = require('os');
+          console.log('Platform:', process.platform);
+          console.log('Shell:', process.platform === 'win32' ? 'cmd.exe' : '/bin/bash');
+          console.log('Arch:', os.arch());
+          console.log('Available shells:');
+          if (process.platform !== 'win32') {
+            const fs = require('fs');
+            const shells = ['/bin/bash', '/bin/zsh', '/bin/sh', '/usr/bin/fish'];
+            shells.forEach(shell => {
+              try {
+                if (fs.existsSync(shell)) console.log('✓', shell);
+              } catch(e) {}
+            });
+          }
+        "

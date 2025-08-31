@@ -5,7 +5,13 @@
       "Bash(npm run lint)",
       "Bash(npm test)",
       "Bash(npm install:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(npx vsce:*)",
+      "Bash(git add:*)",
+      "Bash(git checkout:*)",
+      "Bash(npm run test:platform:*)"
     ],
     "deny": [],
     "ask": []

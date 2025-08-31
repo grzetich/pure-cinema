@@ -1,0 +1,43 @@
+# Test Pure Cinema on Linux
+FROM node:18-bullseye
+
+# Install dependencies for VS Code testing
+RUN apt-get update && apt-get install -y \
+    libnss3 \
+    libatk-bridge2.0-0 \
+    libdrm2 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxrandr2 \
+    libgbm1 \
+    libxss1 \
+    libasound2 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install different shells for testing
+RUN apt-get update && apt-get install -y \
+    bash \
+    zsh \
+    fish \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /workspace
+
+# Copy extension files
+COPY package*.json ./
+COPY . .
+
+# Install dependencies and compile
+RUN npm install
+RUN npm run compile
+
+# Test script
+RUN echo '#!/bin/bash' > /test.sh && \
+    echo 'echo "Testing Pure Cinema on Linux..."' >> /test.sh && \
+    echo 'echo "Platform: $(uname -a)"' >> /test.sh && \
+    echo 'echo "Available shells:"' >> /test.sh && \
+    echo 'ls -la /bin/*sh /usr/bin/fish 2>/dev/null || true' >> /test.sh && \
+    echo 'npm test' >> /test.sh && \
+    chmod +x /test.sh
+
+CMD ["/test.sh"]
